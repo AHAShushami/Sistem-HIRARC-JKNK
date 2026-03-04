@@ -1,0 +1,2200 @@
+﻿<!DOCTYPE html>
+<html lang="ms">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borang Pentaksiran Risiko Tempat Kerja - JKN Kedah</title>
+
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        danger: '#e11d48',
+                        warning: '#d97706',
+                        success: '#16a34a'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'float': '0 10px 40px -10px rgba(0,0,0,0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Pustaka Tambahan -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- SweetAlert2 untuk Notifikasi Moden -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --input-focus-ring: rgba(14, 165, 233, 0.25);
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Smooth Scrollbar Customization */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Form Inputs */
+        .table-input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            outline: none;
+            resize: vertical;
+            min-height: 48px;
+            font-size: 0.875rem;
+            padding: 0.5rem;
+            transition: all 0.2s ease;
+            line-height: 1.5;
+        }
+
+        .table-input:hover {
+            border-color: #e2e8f0;
+            background-color: #f8fafc;
+        }
+
+        .table-input:focus {
+            border-color: #0ea5e9;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px var(--input-focus-ring);
+        }
+
+        select.table-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Table Styling */
+        .glass-table-container {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            padding: 0.75rem;
+            vertical-align: top;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        th {
+            font-weight: 700;
+            text-align: center;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #475569;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Table Header Colors */
+        .th-hazard {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .th-risk {
+            background-color: #ffedd5;
+            color: #c2410c;
+        }
+
+        .th-control {
+            background-color: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .th-eval {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .th-action {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+
+        /* Risk Badges */
+        .rmn-low {
+            background-color: #dcfce7;
+            color: #166534;
+            font-weight: 700;
+            border-radius: 6px;
+        }
+
+        .rmn-medium {
+            background-color: #fef08a;
+            color: #854d0e;
+            font-weight: 700;
+            border-radius: 6px;
+        }
+
+        .rmn-high {
+            background-color: #fecdd3;
+            color: #9f1239;
+            font-weight: 700;
+            border-radius: 6px;
+        }
+
+        /* Details & Summary */
+        details[open] summary~* {
+            animation: sweep .3s ease-in-out;
+        }
+
+        @keyframes sweep {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px)
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Buttons */
+        .btn-modern {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-modern:active {
+            transform: scale(0.97);
+        }
+
+        /* Print Optimization */
+        @page {
+            size: A4 landscape;
+            margin: 8mm;
+        }
+
+        @media print {
+            body {
+                font-size: 8pt;
+                background: white;
+                color: black;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .container {
+                max-width: 100%;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .glass-table-container {
+                border: none;
+                box-shadow: none;
+                overflow: visible;
+            }
+
+            table {
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+            th,
+            td {
+                border: 1px solid #475569 !important;
+                padding: 4px !important;
+                font-size: 7.5pt !important;
+                word-wrap: break-word;
+            }
+
+            input,
+            textarea,
+            select {
+                border: none !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                resize: none;
+                overflow: hidden !important;
+                width: 100%;
+                font-size: 8pt !important;
+                color: black;
+                padding: 0;
+            }
+
+            .min-w-\[1500px\] {
+                min-width: 0 !important;
+            }
+
+            th {
+                position: static;
+                background-color: #f1f5f9 !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            tr {
+                page-break-inside: avoid;
+            }
+
+            .print-active-tab {
+                display: block !important;
+            }
+
+            .print-hidden-tab {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-6 lg:p-8">
+
+    <!-- Floating Background Elements for Premium Feel -->
+    <div class="fixed top-0 left-0 w-full h-96 bg-gradient-to-b from-brand-100/50 to-transparent -z-10 no-print"></div>
+
+    <div
+        class="container mx-auto max-w-full bg-white shadow-float rounded-2xl border border-slate-200 p-6 sm:p-8 relative overflow-hidden">
+
+        <!-- HEADER SECTION -->
+        <div
+            class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-slate-200 pb-6 mb-8 gap-6">
+            <div class="flex items-center gap-5">
+                <div class="p-2 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <img src="https://sebenarnya.my/wp-content/uploads/2017/06/Logo-KKM-e1518677887552.jpg"
+                        alt="Logo KKM" class="h-16 sm:h-20 w-auto object-contain">
+                </div>
+                <div>
+                    <p class="text-brand-600 font-bold tracking-wider text-xs uppercase mb-1">Kementerian Kesihatan
+                        Malaysia</p>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 uppercase tracking-tight">Jabatan
+                        Kesihatan Negeri Kedah</h1>
+                    <h2 class="text-lg text-slate-500 font-medium mt-1">Sistem Pentaksiran Risiko Pekerjaan
+                    </h2>
+                </div>
+            </div>
+
+            <input type="file" id="jsonFileInput" accept=".json" class="hidden" onchange="importDataJSON(event)">
+
+            <div class="flex gap-2.5 no-print flex-wrap lg:justify-end">
+                <button onclick="document.getElementById('jsonFileInput').click()"
+                    class="btn-modern bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 shadow-sm border border-slate-200">
+                    <i class="ph ph-folder-open text-lg"></i> Buka Fail
+                </button>
+                <button onclick="exportDataJSON()"
+                    class="btn-modern bg-amber-500 text-white hover:bg-amber-600 shadow-md shadow-amber-500/20">
+                    <i class="ph ph-download-simple text-lg"></i> Simpan .JSON
+                </button>
+
+                <div class="w-px h-10 bg-slate-200 mx-1 hidden sm:block"></div>
+
+                <button onclick="retrieveFromGoogleSheets()" id="btn-retrieve-cloud"
+                    class="btn-modern bg-cyan-600 text-white hover:bg-cyan-700 shadow-md shadow-cyan-600/20">
+                    <i class="ph ph-cloud-arrow-down text-lg"></i> Cari Rekod
+                </button>
+                <button onclick="saveToGoogleSheets()" id="btn-save-cloud"
+                    class="btn-modern bg-brand-600 text-white hover:bg-brand-700 shadow-md shadow-brand-600/20">
+                    <i class="ph ph-cloud-arrow-up text-lg"></i> Ke Cloud
+                </button>
+                <button onclick="exportToExcel()"
+                    class="btn-modern bg-success text-white hover:bg-green-700 shadow-md shadow-success/20">
+                    <i class="ph ph-file-xls text-lg"></i> Excel
+                </button>
+                <button onclick="exportToWord()"
+                    class="btn-modern bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/20">
+                    <i class="ph ph-file-doc text-lg"></i> Word
+                </button>
+
+                <div class="w-px h-10 bg-slate-200 mx-1 hidden sm:block"></div>
+
+                <button onclick="undoAction()" id="btn-undo"
+                    class="btn-modern bg-slate-500 text-white hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                    disabled title="Undo (Kembalikan Pindaan Terakhir)">
+                    <i class="ph ph-arrow-u-up-left text-lg"></i> Undo
+                </button>
+
+                <button onclick="clearForm()"
+                    class="btn-modern bg-danger text-white hover:bg-rose-700 shadow-md shadow-danger/20"
+                    title="Kosongkan Borang">
+                    <i class="ph ph-trash text-lg"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Tab Navigation system -->
+        <div class="flex border-b-2 border-slate-100 mb-8 no-print overflow-x-auto gap-2 pb-2">
+            <button id="btn-tab-form" onclick="switchTab('form')"
+                class="whitespace-nowrap py-3 px-6 font-bold text-brand-700 bg-brand-50 border-b-4 border-brand-600 transition-all rounded-t-xl shadow-inner flex items-center gap-2">
+                <i class="ph-fill ph-check-square-offset text-xl"></i> Borang Pentaksiran
+            </button>
+            <button id="btn-tab-matrix" onclick="switchTab('matrix')"
+                class="whitespace-nowrap py-3 px-6 font-semibold text-slate-500 border-b-4 border-transparent hover:text-slate-800 hover:bg-slate-50 transition-all rounded-t-xl flex items-center gap-2">
+                <i class="ph-fill ph-grid-four text-xl"></i> Rujukan Matriks Risiko
+            </button>
+            <button id="btn-tab-dashboard" onclick="switchTab('dashboard')"
+                class="whitespace-nowrap py-3 px-6 font-semibold text-slate-500 border-b-4 border-transparent hover:text-slate-800 hover:bg-slate-50 transition-all rounded-t-xl flex items-center gap-2">
+                <i class="ph-fill ph-chart-line-up text-xl"></i> Dashboard Analitik
+            </button>
+        </div>
+
+        <!-- TAB 1: KANDUNGAN BORANG -->
+        <div id="tab-form" class="tab-content block print-active-tab animate-[sweep_0.4s_ease-out]">
+
+            <!-- Company & Assessment Info Section -->
+            <div
+                class="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 text-sm relative">
+
+                <div class="space-y-4 relative z-10" id="profil-container">
+                    <h3
+                        class="font-bold text-brand-900 border-b border-brand-200 pb-2 flex items-center gap-2 uppercase tracking-wide">
+                        <i class="ph-fill ph-buildings text-brand-500 text-lg"></i> Profil Fasiliti
+                    </h3>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Fasiliti:</span> <input
+                            type="text"
+                            class="table-input bg-white shadow-sm font-semibold text-brand-900 resize-none h-auto overflow-hidden text-base"
+                            value="Klinik Kesihatan / Hospital Kedah"></div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Jabatan/Bahagian:</span>
+                        <input type="text" class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden"
+                            value="Jabatan Kesihatan Negeri Kedah">
+                    </div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Unit:</span> <input
+                            type="text" class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden"
+                            value="Pengurusan Fasiliti"></div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Proses Kerja:</span>
+                        <input type="text"
+                            class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden text-brand-700 font-bold border-l-4 border-l-brand-400 focus:ring-brand-500 focus:border-brand-500"
+                            placeholder="Cth: Penyelenggaraan Sistem (HVAC)">
+                    </div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Lokasi:</span> <input
+                            type="text" class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden"
+                            value="BKA I, BKA II, Pengurusan, Perubatan & AHU"></div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Tarikh Pentaksiran:</span>
+                        <input type="date" class="table-input bg-white shadow-sm text-brand-700 font-semibold"
+                            value="2026-03-04">
+                    </div>
+                </div>
+
+                <!-- Pentaksir Risiko -->
+                <div class="space-y-4 relative z-10" id="teamMembersContainer">
+                    <div
+                        class="font-bold text-brand-900 border-b border-brand-200 pb-2 flex items-center justify-between uppercase tracking-wide">
+                        <span class="flex items-center gap-2"><i
+                                class="ph-fill ph-users-three text-brand-500 text-lg"></i>
+                            Pasukan Pentaksir</span>
+                        <button onclick="addTeamMember()"
+                            class="no-print bg-white hover:bg-brand-50 text-brand-600 border border-brand-200 text-xs px-3 py-1.5 rounded-lg shadow-sm font-bold transition flex items-center gap-1"
+                            type="button"><i class="ph-bold ph-plus"></i> Tambah Ahli</button>
+                    </div>
+                    <div class="flex flex-col team-member-row relative group">
+                        <span class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-1">Ketua
+                            Pasukan:</span>
+                        <input type="text"
+                            class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden font-semibold border-l-4 border-l-brand-400"
+                            placeholder="Nama Pentaksir 1">
+                    </div>
+                    <div class="flex flex-col team-member-row relative group">
+                        <span class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-1">Ahli 2:</span>
+                        <input type="text" class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden"
+                            placeholder="Nama Pentaksir 2">
+                    </div>
+                    <div class="flex flex-col team-member-row relative group">
+                        <span class="font-bold text-slate-700 text-xs uppercase tracking-wider mb-1">Ahli 3:</span>
+                        <input type="text" class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden"
+                            placeholder="Nama Pentaksir 3">
+                    </div>
+                </div>
+
+                <!-- Diluluskan Oleh -->
+                <div class="space-y-4 relative z-10" id="pelulus-container">
+                    <h3
+                        class="font-bold text-brand-900 border-b border-brand-200 pb-2 flex items-center gap-2 uppercase tracking-wide">
+                        <i class="ph-fill ph-seal-check text-success text-lg"></i> Pengesahan & Kelulusan
+                    </h3>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Tandatangan:</span>
+                        <div
+                            class="bg-white/50 border border-slate-300 border-dashed rounded h-12 flex items-center justify-center text-slate-400 italic text-xs">
+                            Ruangan T.Tangan (Cetakan Sahaja)</div>
+                    </div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Nama:</span> <input
+                            type="text"
+                            class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden border-l-4 border-l-success"
+                            placeholder="Nama Pelulus"></div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Jawatan:</span> <input
+                            type="text" class="table-input bg-white shadow-sm resize-none h-auto overflow-hidden"
+                            placeholder="Pengarah / Ketua Pasukan / Pegawai JKKP"></div>
+                    <div class="flex flex-col gap-1"><span
+                            class="font-bold text-slate-700 text-xs uppercase tracking-wider">Tarikh Kesahan:</span>
+                        <input type="date" class="table-input bg-white shadow-sm">
+                    </div>
+                    <div class="flex flex-col mt-4 p-3 bg-rose-50 border border-rose-200 rounded-lg shadow-inner"><span
+                            class="font-black text-rose-800 text-xs uppercase tracking-widest mb-1 flex items-center gap-1"><i
+                                class="ph-bold ph-barcode"></i> NO. RUJUKAN DOKUMEN:</span>
+                        <div class="flex gap-2 relative">
+                            <input type="text" id="no-rujukan-input"
+                                class="table-input w-full bg-white font-mono font-bold text-rose-900 text-center tracking-widest text-lg border-rose-300 focus:border-rose-500 focus:ring-rose-200 shadow-sm"
+                                value="HIRARC-JKNK-2026-001">
+                            <button onclick="generateUniqueRef()"
+                                class="btn-modern whitespace-nowrap bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-4 shadow-sm text-sm"
+                                title="Jana ID Rawak" type="button">
+                                <i class="ph-bold ph-arrows-clockwise"></i> Jana Baru
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panduan Dropdown -->
+            <details class="mb-8 bg-white border border-brand-200 rounded-xl shadow-sm no-print group overflow-hidden">
+                <summary
+                    class="font-bold text-brand-900 cursor-pointer p-4 px-6 flex items-center justify-between list-none bg-brand-50/50 hover:bg-brand-50 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-brand-100 rounded-lg text-brand-600"><i class="ph-fill ph-info text-xl"></i>
+                        </div>
+                        <span class="tracking-wide">Panduan Pantas Pengisian Borang HIRAC</span>
+                    </div>
+                    <i
+                        class="ph-bold ph-caret-down text-brand-400 text-xl transform transition-transform duration-300 group-open:-rotate-180"></i>
+                </summary>
+                <div class="p-6 text-sm text-slate-700 bg-white grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-inner">
+                        <h3 class="font-bold text-brand-800 mb-3 flex items-center gap-2"><span
+                                class="bg-brand-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-xs">1</span>
+                            Pengenalpastian Hazard</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-brand-400 mt-0.5"></i>
+                                <span><b>Aktiviti Kerja:</b> Nyatakan tugas / proses (Cth: Operasi sistem
+                                    penyejukan).</span>
+                            </li>
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-brand-400 mt-0.5"></i>
+                                <span><b>Hazard:</b> Punca yang berpotensi mencederakan (Cth: Kebocoran gas
+                                    ammonia).</span>
+                            </li>
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-brand-400 mt-0.5"></i>
+                                <span><b>Kategori:</b> Fizikal, Kimia, Biologikal, Ergonomik, atau Psikososial.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-inner">
+                        <h3 class="font-bold text-amber-600 mb-3 flex items-center gap-2"><span
+                                class="bg-amber-500 text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-xs">2</span>
+                            Penilaian Risiko Sedia Ada</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-amber-400 mt-0.5"></i>
+                                <span><b>L (Likelihood):</b> 1 (Sangat Jarang) - 5 (Sangat Kerap).</span>
+                            </li>
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-amber-400 mt-0.5"></i>
+                                <span><b>S (Severity):</b> 1 (Calar) - 5 (Maut/Bencana).</span>
+                            </li>
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-amber-400 mt-0.5"></i>
+                                <span><b>RMN:</b> <span
+                                        class="bg-success text-white px-1.5 rounded font-bold text-xs mx-1">1-4
+                                        Rendah</span> <span
+                                        class="bg-amber-500 text-white px-1.5 rounded font-bold text-xs mx-1">5-14
+                                        Sederhana</span> <span
+                                        class="bg-danger text-white px-1.5 rounded font-bold text-xs mx-1">15-25
+                                        Tinggi</span></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 shadow-inner">
+                        <h3 class="font-bold text-indigo-700 mb-3 flex items-center gap-2"><span
+                                class="bg-indigo-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-xs">3</span>
+                            Tindakan & Kawalan Tambahan</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-indigo-400 mt-0.5"></i>
+                                <span>Gunakan <b>Hierarki Kawalan</b>: Hapuskan &rarr; Ganti &rarr; Asingkan &rarr;
+                                    Kejuruteraan
+                                    &rarr; Pentadbiran &rarr; PPE.</span>
+                            </li>
+                            <li class="flex items-start gap-2"><i
+                                    class="ph-fill ph-check-circle text-indigo-400 mt-0.5"></i>
+                                <span><b>Penilaian Semula:</b> RMN wajib lebih rendah! Tuliskan PIC (Pegawai) & Tarikh
+                                    Siap.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Main HIRAC Form Table Container -->
+            <div class="glass-table-container relative overflow-x-auto min-h-[500px]">
+                <table class="w-full text-left min-w-[2000px]" id="hiracTable">
+                    <thead>
+                        <tr>
+                            <th rowspan="2"
+                                class="w-12 bg-slate-100 text-slate-500 font-extrabold text-sm border-r-2 border-white border-b-2">
+                                NO.</th>
+                            <th colspan="3" class="th-hazard border-r-2 border-white border-b-2"><i
+                                    class="ph-bold ph-magnifying-glass mr-1"></i> PENGENALPASTIAN HAZARD</th>
+                            <th colspan="5" class="th-risk border-r-2 border-white border-b-2"><i
+                                    class="ph-bold ph-shield-warning mr-1"></i> ANALISIS KAWALAN SEDIA ADA</th>
+                            <th colspan="1" class="th-control border-r-2 border-white border-b-2"><i
+                                    class="ph-bold ph-lightbulb mr-1"></i> CADANGAN KAWALAN TAMBAHAN</th>
+                            <th colspan="3" class="th-eval border-r-2 border-white border-b-2"><i
+                                    class="ph-bold ph-arrows-down mr-1"></i> RISIKO BAKI (RESIDUAL)</th>
+                            <th colspan="2" class="th-action border-b-2"><i class="ph-bold ph-clipboard-text mr-1"></i>
+                                TINDAKAN
+                                & PERINCIAN</th>
+                        </tr>
+                        <tr>
+                            <th class="w-48 th-hazard border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)]">
+                                Aktiviti
+                                Pekerjaan</th>
+                            <th class="w-48 th-hazard border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)]">
+                                Huraian
+                                Hazard / Punca Bahaya</th>
+                            <th
+                                class="w-32 th-hazard border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] text-[10px]">
+                                Klasifikasi</th>
+
+                            <th class="w-48 th-risk border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)]">
+                                Kesan
+                                (Peristiwa & Akibat)</th>
+                            <th class="w-56 th-risk border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)]">
+                                Sistem
+                                Kawalan Sedia Ada</th>
+                            <th class="w-12 th-risk border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] text-[10px]"
+                                title="Likelihood (Kemungkinan)">L</th>
+                            <th class="w-12 th-risk border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] text-[10px]"
+                                title="Severity (Keterukan)">S</th>
+                            <th class="w-16 th-risk border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] font-black text-sm"
+                                title="Risk Matrix Number">RMN</th>
+
+                            <th
+                                class="w-64 th-control border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)]">
+                                Hierarki Kawalan Risiko yang Disyorkan</th>
+
+                            <th class="w-12 th-eval border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] text-[10px]"
+                                title="Likelihood">L</th>
+                            <th class="w-12 th-eval border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] text-[10px]"
+                                title="Severity">S</th>
+                            <th class="w-16 th-eval border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] font-black text-sm"
+                                title="Risk Matrix Number">RMN</th>
+
+                            <th
+                                class="w-40 th-action border-r-2 border-white shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)] text-[10px]">
+                                Pegawai Bertanggungjawab / Tarikh Sasaran</th>
+                            <th class="w-40 th-action shadow-[inset_0_-2px_0_rgba(0,0,0,0.05)]">Status Laksana / Bukti /
+                                Nota
+                                Tambahan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="bg-white">
+                        <!-- ROW 1 -->
+                        <tr class="hover:bg-slate-50 transition-colors group main-row">
+                            <td class="text-center font-bold text-slate-700 relative row-num" rowspan="1">
+                                <span
+                                    class="bg-slate-100 rounded-full w-6 h-6 inline-flex items-center justify-center border border-slate-200 shadow-sm">1</span>
+                                <button onclick="deleteRow(this)"
+                                    class="absolute top-2 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100 z-10"
+                                    title="Buang Baris Utama"><i class="ph-bold ph-trash"></i></button>
+                            </td>
+                            <td class="row-activity relative" rowspan="1">
+                                <textarea
+                                    class="table-input h-24">Bekerja di dalam ruang pejabat bertutup (BKA I & Unit UIP).</textarea>
+                                <div class="mt-2 text-right no-print">
+                                    <button onclick="addSubRow(this)"
+                                        class="text-xs font-bold bg-brand-50 hover:bg-brand-100 text-brand-700 py-1.5 px-3 rounded-md border border-brand-200 shadow-sm transition-colors flex items-center gap-1 ml-auto"><i
+                                            class="ph-bold ph-plus-circle"></i> Tambah Hazard</button>
+                                </div>
+                            </td>
+                            <td class="relative"><textarea
+                                    class="table-input h-24">Ketidakseimbangan aliran HVAC; halaju udara rendah (<0.15 m/s) dan pengumpulan CO2 (>1000 ppm).</textarea>
+                            </td>
+                            <td>
+                                <select
+                                    class="table-input font-bold text-xs text-brand-700 bg-brand-50/30 border-brand-100">
+                                    <option value="Fizikal" selected>Fizikal</option>
+                                    <option value="Kimia">Kimia</option>
+                                    <option value="Biologikal">Biologikal</option>
+                                    <option value="Ergonomik">Ergonomik</option>
+                                    <option value="Psikososial">Psikososial</option>
+                                </select>
+                            </td>
+                            <td><textarea
+                                    class="table-input h-24">Sindrom Bangunan Sakit (SBS), sakit kepala, kelesuan, penurunan prestasi analisis akibat kekurangan oksigen.</textarea>
+                            </td>
+                            <td class="align-top bg-slate-50/50">
+                                <div class="controls-container">
+                                    <div class="relative group control-item mb-2 pb-2">
+                                        <textarea
+                                            class="table-input h-24 bg-white">Penggunaan kipas angin peribadi (mengganggu dinamik aliran laminar asal).</textarea>
+                                        <button onclick="removeElementAndSave(this)"
+                                            class="absolute top-2 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100"><i
+                                                class="ph-bold ph-minus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-right no-print border-t border-slate-200 pt-2">
+                                    <button onclick="addControl(this)"
+                                        class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 py-1 px-2 rounded border border-slate-200 shadow-sm transition-colors flex items-center gap-1 ml-auto"><i
+                                            class="ph-bold ph-plus"></i> Tambah Kawalan</button>
+                                </div>
+                            </td>
+                            <td class="bg-amber-50/30"><select
+                                    class="table-input text-center font-bold text-amber-700 risk-factor pre-l"
+                                    onchange="calcRow(this)">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4" selected>4</option>
+                                    <option value="5">5</option>
+                                </select></td>
+                            <td class="bg-amber-50/30"><select
+                                    class="table-input text-center font-bold text-amber-700 risk-factor pre-s"
+                                    onchange="calcRow(this)">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3" selected>3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select></td>
+                            <td
+                                class="pre-rmn text-center align-middle text-xl bg-slate-50 border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+                                12</td>
+
+                            <td class="bg-indigo-50/30"><textarea
+                                    class="table-input h-24 bg-white border border-indigo-100">1. Lantik pakar HVAC jalankan Ujian, Penyelarasan & Pengimbangan (TAB).
+2. Ubah semula posisi perabot yang halang diffuser.
+3. Selaraskan peredam (balancing damper).</textarea></td>
+
+                            <td class="bg-success/5"><select
+                                    class="table-input text-center font-bold text-success risk-factor post-l"
+                                    onchange="calcRow(this)">
+                                    <option value="1">1</option>
+                                    <option value="2" selected>2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select></td>
+                            <td class="bg-success/5"><select
+                                    class="table-input text-center font-bold text-success risk-factor post-s"
+                                    onchange="calcRow(this)">
+                                    <option value="1">1</option>
+                                    <option value="2" selected>2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select></td>
+                            <td
+                                class="post-rmn text-center align-middle text-xl bg-slate-50 border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+                                4</td>
+
+                            <td><textarea
+                                    class="table-input h-24 font-semibold text-slate-700">Jurutera Fasiliti (Bulan depan)</textarea>
+                            </td>
+                            <td><textarea
+                                    class="table-input h-24 text-slate-600">Tindakan proaktif (predictive maintenance).</textarea>
+                            </td>
+                        </tr>
+
+                        <!-- More rows omitted for brevity, logic exactly matches part 1 but with styling upgrades -->
+                    </tbody>
+                </table>
+
+                <!-- Add Main Row Button -->
+                <div class="mt-6 mb-4 flex justify-end no-print px-4">
+                    <button onclick="addMainRow()"
+                        class="btn-modern bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-600/30 font-bold px-6 py-3">
+                        <i class="ph-bold ph-plus-circle text-lg"></i> Tambah Aktiviti Pekerjaan Baru
+                    </button>
+                </div>
+            </div>
+        </div> <!-- END TAB 1 -->
+        <!-- TAB 2: MATRIKS RISIKO -->
+        <div id="tab-matrix" class="tab-content hidden print-hidden-tab animate-[sweep_0.4s_ease-out]">
+            <div class="bg-white rounded-2xl p-6 sm:p-10 mb-8 shadow-float border border-slate-200">
+                <h3
+                    class="text-2xl sm:text-3xl font-extrabold text-slate-800 border-b-2 border-slate-100 pb-4 mb-8 flex items-center gap-3">
+                    <i class="ph-fill ph-grid-four text-brand-600"></i> Matriks Penilaian Risiko (L x S)
+                </h3>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
+                    <!-- Grid Jadual Matriks -->
+                    <div class="overflow-x-auto p-2">
+                        <table
+                            class="w-full text-center border-collapse border-2 border-slate-300 min-w-[500px] shadow-sm rounded-xl overflow-hidden">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" rowspan="2" class="border-none bg-transparent"></td>
+                                    <th colspan="5"
+                                        class="bg-slate-200 border border-slate-300 py-3 text-sm font-bold text-slate-700 uppercase tracking-widest">
+                                        Keterukan (Severity)</th>
+                                </tr>
+                                <tr class="text-xs uppercase tracking-wider text-slate-600">
+                                    <th class="w-1/6 bg-slate-100 border border-slate-300 p-2 leading-tight">1<br><span
+                                            class="font-normal">Pengabaian</span></th>
+                                    <th class="w-1/6 bg-slate-100 border border-slate-300 p-2 leading-tight">2<br><span
+                                            class="font-normal">Ringan</span></th>
+                                    <th class="w-1/6 bg-slate-100 border border-slate-300 p-2 leading-tight">3<br><span
+                                            class="font-normal">Sederhana</span></th>
+                                    <th class="w-1/6 bg-slate-100 border border-slate-300 p-2 leading-tight">4<br><span
+                                            class="font-normal">Teruk</span></th>
+                                    <th class="w-1/6 bg-slate-100 border border-slate-300 p-2 leading-tight">5<br><span
+                                            class="font-normal">Bencana</span></th>
+                                </tr>
+                                <tr>
+                                    <th rowspan="5"
+                                        class="bg-slate-200 border border-slate-300 p-2 text-sm font-bold text-slate-700 uppercase tracking-widest"
+                                        style="writing-mode: vertical-rl; transform: rotate(180deg);">Kemungkinan
+                                        (Likelihood)
+                                    </th>
+                                    <th
+                                        class="bg-slate-100 border border-slate-300 p-3 text-right text-xs uppercase tracking-wider text-slate-600">
+                                        5 - Paling Kerap</th>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        5</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        10</td>
+                                    <td
+                                        class="bg-rose-400 font-black border border-slate-300 text-rose-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        15</td>
+                                    <td
+                                        class="bg-rose-400 font-black border border-slate-300 text-rose-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        20</td>
+                                    <td
+                                        class="bg-rose-500 font-black border border-slate-300 text-rose-100 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
+                                        25</td>
+                                </tr>
+                                <tr>
+                                    <th
+                                        class="bg-slate-100 border border-slate-300 p-3 text-right text-xs uppercase tracking-wider text-slate-600">
+                                        4 - Kerap</th>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        4</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        8</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        12</td>
+                                    <td
+                                        class="bg-rose-400 font-black border border-slate-300 text-rose-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        16</td>
+                                    <td
+                                        class="bg-rose-400 font-black border border-slate-300 text-rose-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        20</td>
+                                </tr>
+                                <tr>
+                                    <th
+                                        class="bg-slate-100 border border-slate-300 p-3 text-right text-xs uppercase tracking-wider text-slate-600">
+                                        3 - Mungkin</th>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        3</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        6</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        9</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        12</td>
+                                    <td
+                                        class="bg-rose-400 font-black border border-slate-300 text-rose-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        15</td>
+                                </tr>
+                                <tr>
+                                    <th
+                                        class="bg-slate-100 border border-slate-300 p-3 text-right text-xs uppercase tracking-wider text-slate-600">
+                                        2 - Jarang</th>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        2</td>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        4</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        6</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        8</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        10</td>
+                                </tr>
+                                <tr>
+                                    <th
+                                        class="bg-slate-100 border border-slate-300 p-3 text-right text-xs uppercase tracking-wider text-slate-600">
+                                        1 - Sangat Jarang</th>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        1</td>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        2</td>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        3</td>
+                                    <td
+                                        class="bg-emerald-300 font-black border border-slate-300 text-emerald-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        4</td>
+                                    <td
+                                        class="bg-amber-300 font-black border border-slate-300 text-amber-900 text-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
+                                        5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Penerangan / Petunjuk -->
+                    <div class="space-y-6 text-sm flex flex-col justify-center">
+                        <h4
+                            class="text-lg font-bold text-slate-800 mb-2 border-b-2 border-slate-100 pb-2 flex items-center gap-2">
+                            <i class="ph-fill ph-info"></i> Petunjuk Klasifikasi Risiko
+                        </h4>
+                        <ul class="space-y-6">
+                            <li class="flex items-start gap-5 p-4 bg-rose-50/50 rounded-xl border border-rose-100">
+                                <span
+                                    class="inline-block w-14 h-14 shrink-0 bg-gradient-to-br from-rose-400 to-rose-600 border border-rose-500 rounded-xl flex items-center justify-center font-black text-white text-xl shadow-md">15-25</span>
+                                <div>
+                                    <span class="font-black text-rose-800 text-lg uppercase tracking-wide">TINGGI
+                                        (HIGH)</span>
+                                    <p class="text-slate-600 mt-1 leading-relaxed text-sm">Tindakan pengawalan
+                                        <b>SEGERA</b>
+                                        diwajibkan. Aktiviti kerja tidak boleh diteruskan sehingga tahap risiko berjaya
+                                        diturunkan. Hentikan kerja serta-merta jika perlu.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-5 p-4 bg-amber-50/50 rounded-xl border border-amber-100">
+                                <span
+                                    class="inline-block w-14 h-14 shrink-0 bg-gradient-to-br from-amber-300 to-amber-500 border border-amber-400 rounded-xl flex items-center justify-center font-black text-white text-xl shadow-md">5-14</span>
+                                <div>
+                                    <span class="font-black text-amber-800 text-lg uppercase tracking-wide">SEDERHANA
+                                        (MEDIUM)</span>
+                                    <p class="text-slate-600 mt-1 leading-relaxed text-sm">Tindakan munasabah perlu
+                                        diambil
+                                        untuk mengurangkan risiko ke tahap serendah yang boleh dipraktikkan (ALARP).
+                                        Langkah
+                                        sementara diperlukan.</p>
+                                </div>
+                            </li>
+                            <li
+                                class="flex items-start gap-5 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                                <span
+                                    class="inline-block w-14 h-14 shrink-0 bg-gradient-to-br from-emerald-300 to-emerald-500 border border-emerald-400 rounded-xl flex items-center justify-center font-black text-white text-xl shadow-md">1-4</span>
+                                <div>
+                                    <span class="font-black text-emerald-800 text-lg uppercase tracking-wide">RENDAH
+                                        (LOW)</span>
+                                    <p class="text-slate-600 mt-1 leading-relaxed text-sm">Tahap risiko boleh diterima.
+                                        Langkah
+                                        kawalan sedia ada memadai. Walaubagaimanapun, pemantauan berkala diperlukan.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- END TAB 2 -->
+
+        <!-- TAB 3: DASHBOARD ANALITIK -->
+        <div id="tab-dashboard" class="tab-content hidden print-hidden-tab animate-[sweep_0.4s_ease-out]">
+            <div class="flex justify-end mb-4 no-print px-2">
+                <button onclick="downloadDashboardImage()" id="btn-download-dash"
+                    class="btn-modern bg-brand-600 text-white hover:bg-brand-700 shadow-md shadow-brand-600/30 font-bold px-6">
+                    <i class="ph-bold ph-download-simple text-lg"></i> Muat Turun JPEG Resolusi Tinggi
+                </button>
+            </div>
+
+            <div id="dashboard-capture-area"
+                class="bg-slate-50 rounded-3xl p-8 mb-8 border border-slate-200 shadow-inner relative overflow-hidden">
+
+                <div class="border-b-4 border-slate-200 pb-6 mb-8 flex justify-between items-end">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="ph-fill ph-chart-polar text-brand-500 text-2xl"></i>
+                            <p class="text-brand-600 font-black tracking-widest text-sm uppercase">Papan Pemuka
+                                Keselamatan
+                                Pekerjaan</p>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 uppercase tracking-tight"
+                            id="dash-facility-name">Nama Fasiliti</h2>
+                        <p class="text-slate-500 font-semibold text-base mt-2 flex items-center gap-3">
+                            <i class="ph-fill ph-buildings"></i> <span id="dash-bahagian"
+                                class="text-slate-700">Bahagian</span>
+                            &bull;
+                            <i class="ph-fill ph-briefcase"></i> <span id="dash-unit">Unit</span> &bull;
+                            <i class="ph-fill ph-stack"></i> <span id="dash-proses">Proses Kerja</span> &bull;
+                            <i class="ph-fill ph-map-pin"></i> <span id="dash-lokasi">Lokasi</span>
+                        </p>
+                    </div>
+                    <div class="text-right bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100">
+                        <p class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-1">Tarikh Rekod</p>
+                        <p class="text-brand-700 font-black text-xl" id="dash-tarikh">dd/mm/yyyy</p>
+                    </div>
+                </div>
+
+                <div id="dash-summary-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <!-- Kad Keseluruhan Hazard -->
+                    <div
+                        class="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl shadow-lg p-8 text-white flex flex-col justify-center relative overflow-hidden">
+                        <i class="ph-fill ph-shield-warning absolute -right-6 -bottom-6 text-9xl text-white/10"></i>
+                        <h4 class="font-bold text-brand-100 text-sm mb-4 uppercase tracking-wider z-10">Jumlah
+                            Keseluruhan
+                            Hazard</h4>
+                        <div class="flex items-baseline gap-3 z-10">
+                            <span class="text-6xl font-black" id="dash-total">0</span>
+                            <span class="text-brand-200 font-medium">dikenalpasti</span>
+                        </div>
+                    </div>
+
+                    <!-- Kad Risiko Sedia Ada (Sebelum) -->
+                    <div
+                        class="bg-white rounded-3xl shadow-soft p-8 border border-slate-100 flex flex-col justify-center">
+                        <h4 class="text-slate-500 font-bold text-sm mb-6 uppercase tracking-wider">Status Risiko Semasa
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center group">
+                                <span
+                                    class="text-sm font-bold text-rose-700 bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-100 flex items-center gap-2 transition-all">
+                                    <div class="w-2 h-2 rounded-full bg-rose-500"></div> Tinggi (15-25)
+                                </span>
+                                <span
+                                    class="font-black text-2xl text-slate-800 group-hover:text-rose-600 transition-colors"
+                                    id="dash-pre-high">0</span>
+                            </div>
+                            <div class="flex justify-between items-center group">
+                                <span
+                                    class="text-sm font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100 flex items-center gap-2 transition-all">
+                                    <div class="w-2 h-2 rounded-full bg-amber-500"></div> Sederhana (5-14)
+                                </span>
+                                <span
+                                    class="font-black text-2xl text-slate-800 group-hover:text-amber-600 transition-colors"
+                                    id="dash-pre-med">0</span>
+                            </div>
+                            <div class="flex justify-between items-center group">
+                                <span
+                                    class="text-sm font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 flex items-center gap-2 transition-all">
+                                    <div class="w-2 h-2 rounded-full bg-emerald-500"></div> Rendah (1-4)
+                                </span>
+                                <span
+                                    class="font-black text-2xl text-slate-800 group-hover:text-emerald-600 transition-colors"
+                                    id="dash-pre-low">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carta Taburan Kategori -->
+                    <div
+                        class="bg-white rounded-3xl shadow-soft p-6 border border-slate-100 flex flex-col justify-center items-center">
+                        <h4 class="text-slate-500 font-bold text-sm mb-2 w-full text-left uppercase tracking-wider">
+                            Taburan
+                            Kategori</h4>
+                        <div class="relative w-full flex-1" style="min-height: 200px;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Senarai Hazard & Status -->
+                <div class="bg-white rounded-3xl shadow-soft border border-slate-100 overflow-hidden">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                        <h4 class="text-slate-800 font-black text-lg flex items-center gap-2"><i
+                                class="ph-bold ph-list-dashes text-brand-500"></i> Rekod Eksekutif Hazard</h4>
+                    </div>
+                    <div class="overflow-x-auto p-2">
+                        <table class="w-full text-left text-sm border-collapse min-w-[700px]">
+                            <thead>
+                                <tr class="text-slate-400 uppercase tracking-wider text-[10px] font-black">
+                                    <th class="p-4 w-12 text-center pb-2 border-b-2 border-slate-100">No.</th>
+                                    <th class="p-4 w-3/4 pb-2 border-b-2 border-slate-100">Keterangan Klasifikasi Hazard
+                                    </th>
+                                    <th class="p-4 w-1/4 text-center pb-2 border-b-2 border-slate-100">Penilaian Tahap
+                                        Risiko
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-hazard-list">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-right text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                    Dijana oleh Sistem HIRAC JKN Kedah &copy; 2026
+                </div>
+
+            </div>
+        </div> <!-- END TAB 3 -->
+
+    </div>
+
+    <div
+        class="mt-8 mb-4 text-center text-sm text-slate-400 font-semibold print:mt-4 print:text-[7pt] print:text-slate-500 w-full tracking-wide">
+        <i class="ph-fill ph-code text-brand-400"></i> Dibangunkan oleh Unit Kesihatan Pekerjaan dan Alam
+        Sekitar,<br>Bahagian Kesihatan Awam, Jabatan Kesihatan Negeri Kedah 2026
+    </div>
+
+    <script>
+        // Global State
+        let categoryChartInstance = null;
+        let formHistory = [];
+        let lastSavedState = null;
+        let isUndoing = false;
+
+        // SweetAlert Wrappers
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#ffffff',
+            color: '#1e293b',
+            iconColor: '#0ea5e9'
+        });
+
+        // Event Listener for automatic history saving
+        document.getElementById('tab-form').addEventListener('change', function (e) {
+            saveCurrentStateToHistory();
+        });
+
+        function saveCurrentStateToHistory() {
+            if (isUndoing) return;
+            if (lastSavedState) {
+                formHistory.push(JSON.stringify(lastSavedState));
+                if (formHistory.length > 30) formHistory.shift();
+
+                const undoBtn = document.getElementById('btn-undo');
+                if (undoBtn) undoBtn.disabled = false;
+            }
+            lastSavedState = getFormJSONData();
+        }
+
+        function undoAction() {
+            if (formHistory.length === 0) return;
+            isUndoing = true;
+
+            const stateStr = formHistory.pop();
+            const previousState = JSON.parse(stateStr);
+            loadFormJSONData(previousState);
+
+            if (formHistory.length === 0) {
+                document.getElementById('btn-undo').disabled = true;
+            }
+
+            lastSavedState = getFormJSONData();
+            isUndoing = false;
+
+            Toast.fire({ icon: 'info', title: 'Tindakan terakhir dibatalkan (Undo).' });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('block', 'print-active-tab');
+                tab.classList.add('hidden', 'print-hidden-tab');
+            });
+
+            document.querySelectorAll('[id^="btn-tab-"]').forEach(btn => {
+                btn.className = "whitespace-nowrap py-3 px-6 font-semibold text-slate-500 border-b-4 border-transparent hover:text-slate-800 hover:bg-slate-50 transition-all rounded-t-xl flex items-center gap-2";
+            });
+
+            const activeTab = document.getElementById('tab-' + tabId);
+            const activeBtn = document.getElementById('btn-tab-' + tabId);
+
+            activeTab.classList.remove('hidden', 'print-hidden-tab');
+            activeTab.classList.add('block', 'print-active-tab');
+
+            // Dynamic icon styling based on active tab
+            let activeIcon = '';
+            if (tabId === 'form') activeIcon = '<i class="ph-fill ph-check-square-offset text-xl"></i> Borang Pentaksiran';
+            if (tabId === 'matrix') activeIcon = '<i class="ph-fill ph-grid-four text-xl"></i> Rujukan Matriks Risiko';
+            if (tabId === 'dashboard') activeIcon = '<i class="ph-fill ph-chart-line-up text-xl"></i> Dashboard Analitik';
+
+            activeBtn.className = "whitespace-nowrap py-3 px-6 font-bold text-brand-700 bg-brand-50 border-b-4 border-brand-600 transition-all rounded-t-xl shadow-inner flex items-center gap-2";
+            activeBtn.innerHTML = activeIcon;
+
+            if (tabId === 'form') {
+                document.getElementById('tab-matrix').classList.remove('print-hidden-tab');
+                document.getElementById('tab-matrix').classList.add('print-active-tab');
+            }
+
+            if (tabId === 'dashboard') {
+                updateDashboardData();
+            }
+        }
+
+        function getRiskClass(rmn) {
+            if (rmn >= 15) return 'rmn-high';
+            if (rmn >= 5) return 'rmn-medium';
+            return 'rmn-low';
+        }
+
+        function calcRow(selectElem) {
+            const tr = selectElem.closest('tr');
+
+            const preL = parseInt(tr.querySelector('.pre-l').value) || 1;
+            const preS = parseInt(tr.querySelector('.pre-s').value) || 1;
+            const preRmnCell = tr.querySelector('.pre-rmn');
+            const preRmn = preL * preS;
+            preRmnCell.textContent = preRmn;
+            preRmnCell.className = `pre-rmn text-center align-middle text-xl border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] ${getRiskClass(preRmn)}`;
+
+            const postL = parseInt(tr.querySelector('.post-l').value) || 1;
+            const postS = parseInt(tr.querySelector('.post-s').value) || 1;
+            const postRmnCell = tr.querySelector('.post-rmn');
+            const postRmn = postL * postS;
+            postRmnCell.textContent = postRmn;
+            postRmnCell.className = `post-rmn text-center align-middle text-xl border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] ${getRiskClass(postRmn)}`;
+        }
+
+        function updateRowNumbers() {
+            const rows = document.querySelectorAll('#tableBody > tr.main-row');
+            rows.forEach((row, index) => {
+                const numCell = row.querySelector('.row-num');
+                if (numCell) {
+                    const span = numCell.querySelector('span');
+                    if (span) span.textContent = index + 1;
+                }
+            });
+        }
+
+        // Include logic implementations for addMainRow, addSubRow, deleteRow same as original 
+        // Just modified the template literal HTML to match the new Tailwind classes
+        function addMainRow(isInternal = false) {
+            if (!isInternal) saveCurrentStateToHistory();
+            const tbody = document.getElementById('tableBody');
+            const newRow = document.createElement('tr');
+            newRow.className = 'hover:bg-slate-50 transition-colors group main-row';
+            newRow.innerHTML = `
+            <td class="text-center font-bold text-slate-700 relative row-num" rowspan="1">
+                <span class="bg-slate-100 rounded-full w-6 h-6 inline-flex items-center justify-center border border-slate-200 shadow-sm">-</span>
+                <button onclick="deleteRow(this)" class="absolute top-2 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100 z-10"><i class="ph-bold ph-trash"></i></button>
+            </td>
+            <td class="row-activity relative" rowspan="1">
+                <textarea class="table-input h-24" placeholder="Aktiviti Pekerjaan..."></textarea>
+                <div class="mt-2 text-right no-print">
+                    <button onclick="addSubRow(this)" class="text-xs font-bold bg-brand-50 hover:bg-brand-100 text-brand-700 py-1.5 px-3 rounded-md border border-brand-200 shadow-sm transition-colors flex items-center gap-1 ml-auto"><i class="ph-bold ph-plus-circle"></i> Tambah Hazard</button>
+                </div>
+            </td>
+            <td class="relative"><textarea class="table-input h-24" placeholder="Penerangan Hazard..."></textarea></td>
+            <td><select class="table-input font-bold text-xs text-brand-700 bg-brand-50/30 border-brand-100"><option value="Fizikal">Fizikal</option><option value="Kimia">Kimia</option><option value="Biologikal">Biologikal</option><option value="Ergonomik">Ergonomik</option><option value="Psikososial">Psikososial</option></select></td>
+            <td><textarea class="table-input h-24" placeholder="Kesan..."></textarea></td>
+            <td class="align-top bg-slate-50/50">
+                <div class="controls-container">
+                    <div class="relative group control-item mb-2 pb-2">
+                        <textarea class="table-input h-24 bg-white" placeholder="Kawalan Sedia Ada..."></textarea>
+                        <button onclick="removeElementAndSave(this)" class="absolute top-2 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100"><i class="ph-bold ph-minus"></i></button>
+                    </div>
+                </div>
+                <div class="mt-2 text-right no-print border-t border-slate-200 pt-2"><button onclick="addControl(this)" class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 py-1 px-2 rounded border border-slate-200 shadow-sm transition-colors flex items-center gap-1 ml-auto"><i class="ph-bold ph-plus"></i> Tambah Kawalan</button></div>
+            </td>
+            <td class="bg-amber-50/30"><select class="table-input text-center font-bold text-amber-700 risk-factor pre-l" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="bg-amber-50/30"><select class="table-input text-center font-bold text-amber-700 risk-factor pre-s" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="pre-rmn text-center align-middle text-xl bg-slate-50 border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"></td>
+            <td class="bg-indigo-50/30"><textarea class="table-input h-24 bg-white border border-indigo-100" placeholder="Langkah tambahan..."></textarea></td>
+            <td class="bg-success/5"><select class="table-input text-center font-bold text-success risk-factor post-l" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="bg-success/5"><select class="table-input text-center font-bold text-success risk-factor post-s" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="post-rmn text-center align-middle text-xl bg-slate-50 border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"></td>
+            <td><textarea class="table-input h-24 font-semibold text-slate-700"></textarea></td>
+            <td><textarea class="table-input h-24 text-slate-600"></textarea></td>
+        `;
+            tbody.appendChild(newRow);
+            updateRowNumbers();
+            calcRow(newRow.querySelector('.pre-l'));
+            if (!isInternal) lastSavedState = getFormJSONData();
+        }
+
+        function addSubRow(btn, isInternal = false) {
+            if (!isInternal) saveCurrentStateToHistory();
+            const currentRow = btn.closest('tr');
+            const isMainRow = currentRow.classList.contains('main-row');
+            let mainRow = currentRow;
+            if (!isMainRow) {
+                let prev = currentRow.previousElementSibling;
+                while (prev && !prev.classList.contains('main-row')) prev = prev.previousElementSibling;
+                if (prev) mainRow = prev;
+            }
+
+            const numCell = mainRow.querySelector('.row-num');
+            const activityCell = mainRow.querySelector('.row-activity');
+            let currentSpan = parseInt(numCell.getAttribute('rowspan')) || 1;
+            numCell.setAttribute('rowspan', currentSpan + 1);
+            activityCell.setAttribute('rowspan', currentSpan + 1);
+
+            const newRow = document.createElement('tr');
+            newRow.className = 'hover:bg-slate-50 transition-colors group sub-row border-t-0';
+            newRow.innerHTML = `
+            <td class="relative">
+                <textarea class="table-input h-24" placeholder="Hazard Baru..."></textarea>
+                <button onclick="deleteSubRow(this)" class="absolute top-2 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100 z-10"><i class="ph-bold ph-trash"></i></button>
+            </td>
+            <td><select class="table-input font-bold text-xs text-brand-700 bg-brand-50/30 border-brand-100"><option value="Fizikal">Fizikal</option><option value="Kimia">Kimia</option><option value="Biologikal">Biologikal</option><option value="Ergonomik">Ergonomik</option><option value="Psikososial">Psikososial</option></select></td>
+            <td><textarea class="table-input h-24" placeholder="Kesan..."></textarea></td>
+            <td class="align-top bg-slate-50/50">
+                <div class="controls-container">
+                    <div class="relative group control-item mb-2 pb-2">
+                        <textarea class="table-input h-24 bg-white" placeholder="Kawalan Sedia Ada..."></textarea>
+                        <button onclick="removeElementAndSave(this)" class="absolute top-2 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100"><i class="ph-bold ph-minus"></i></button>
+                    </div>
+                </div>
+                <div class="mt-2 text-right no-print border-t border-slate-200 pt-2"><button onclick="addControl(this)" class="text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 py-1 px-2 rounded border border-slate-200 shadow-sm transition-colors flex items-center gap-1 ml-auto"><i class="ph-bold ph-plus"></i> Tambah Kawalan</button></div>
+            </td>
+            <td class="bg-amber-50/30"><select class="table-input text-center font-bold text-amber-700 risk-factor pre-l" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="bg-amber-50/30"><select class="table-input text-center font-bold text-amber-700 risk-factor pre-s" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="pre-rmn text-center align-middle text-xl bg-slate-50 border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"></td>
+            <td class="bg-indigo-50/30"><textarea class="table-input h-24 bg-white border border-indigo-100" placeholder="Langkah tambahan..."></textarea></td>
+            <td class="bg-success/5"><select class="table-input text-center font-bold text-success risk-factor post-l" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="bg-success/5"><select class="table-input text-center font-bold text-success risk-factor post-s" onchange="calcRow(this)"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></td>
+            <td class="post-rmn text-center align-middle text-xl bg-slate-50 border-x border-slate-200 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"></td>
+            <td><textarea class="table-input h-24 font-semibold text-slate-700"></textarea></td>
+            <td><textarea class="table-input h-24 text-slate-600"></textarea></td>
+        `;
+            let insertAfterRow = currentRow;
+            while (insertAfterRow.nextElementSibling && insertAfterRow.nextElementSibling.classList.contains('sub-row')) insertAfterRow = insertAfterRow.nextElementSibling;
+            insertAfterRow.after(newRow);
+            calcRow(newRow.querySelector('.pre-l'));
+            if (!isInternal) lastSavedState = getFormJSONData();
+        }
+
+        function removeElementAndSave(btn) {
+            saveCurrentStateToHistory();
+            btn.parentElement.remove();
+            lastSavedState = getFormJSONData();
+        }
+
+        function addControl(btn) {
+            saveCurrentStateToHistory();
+            const container = btn.closest('td').querySelector('.controls-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'relative group control-item mb-2 pb-2 border-t border-slate-200 pt-2';
+            newItem.innerHTML = `
+            <textarea class="table-input h-16 bg-white" placeholder="Kawalan Tambahan..."></textarea>
+            <button onclick="removeElementAndSave(this)" class="absolute top-4 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100"><i class="ph-bold ph-minus"></i></button>
+        `;
+            container.appendChild(newItem);
+            lastSavedState = getFormJSONData();
+        }
+
+        function deleteRow(btn) {
+            Swal.fire({
+                title: 'Padam Aktiviti?',
+                text: "Kesemua hazard di bawah aktiviti ini akan terhapus.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e11d48',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Ya, Padam!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    saveCurrentStateToHistory();
+                    const tr = btn.closest('tr');
+                    if (tr.classList.contains('main-row')) {
+                        let next = tr.nextElementSibling;
+                        while (next && next.classList.contains('sub-row')) {
+                            let toDelete = next;
+                            next = next.nextElementSibling;
+                            toDelete.remove();
+                        }
+                        tr.remove();
+                        updateRowNumbers();
+                        if (!document.getElementById('tab-dashboard').classList.contains('hidden')) updateDashboardData();
+                    }
+                    lastSavedState = getFormJSONData();
+                    Toast.fire({ icon: 'success', title: 'Aktiviti dipadamkan' });
+                }
+            });
+        }
+
+        function deleteSubRow(btn) {
+            Swal.fire({
+                title: 'Padam Hazard?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e11d48',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    saveCurrentStateToHistory();
+                    const tr = btn.closest('tr');
+                    let prev = tr.previousElementSibling;
+                    while (prev && !prev.classList.contains('main-row')) prev = prev.previousElementSibling;
+                    if (prev) {
+                        const numCell = prev.querySelector('.row-num');
+                        const activityCell = prev.querySelector('.row-activity');
+                        let currentSpan = parseInt(numCell.getAttribute('rowspan')) || 2;
+                        numCell.setAttribute('rowspan', currentSpan - 1);
+                        activityCell.setAttribute('rowspan', currentSpan - 1);
+                    }
+                    tr.remove();
+                    if (!document.getElementById('tab-dashboard').classList.contains('hidden')) updateDashboardData();
+                    lastSavedState = getFormJSONData();
+                    Toast.fire({ icon: 'success', title: 'Hazard dipadamkan' });
+                }
+            });
+        }
+
+        function clearForm() {
+            Swal.fire({
+                title: 'Kosongkan Borang?',
+                text: "Semua rekod di skrin akan dipadamkan (Boleh guna butang Undo nanti)",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e11d48',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Ya, Kosongkan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    saveCurrentStateToHistory();
+                    document.querySelectorAll('#tab-form .grid input:not([type="date"])').forEach(input => input.value = '');
+                    const tbody = document.getElementById('tableBody');
+                    tbody.innerHTML = '';
+                    addMainRow(true);
+                    updateDashboardData();
+                    lastSavedState = getFormJSONData();
+                    Toast.fire({ icon: 'success', title: 'Borang dikosongkan' });
+                }
+            });
+        }
+
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzwOMPJ6zGPI8oScyjXbx8EqKJzDuYy664RiYou_Y5HYJUtMbEOrhkuMZhBunGmsz16/exec";
+
+        async function retrieveFromGoogleSheets() {
+            const noRuj = document.getElementById('no-rujukan-input').value.trim();
+            if (!noRuj) {
+                Swal.fire('Ralat', 'Sila masukkan NO. RUJUKAN DOKUMEN (Cth: HIRARC-JKNK-...) untuk mula mencari.', 'warning');
+                return;
+            }
+            if (!WEB_APP_URL || WEB_APP_URL.includes("SILA_MASUKKAN")) {
+                Swal.fire('Belum Disambung', 'Sila tukar WEB_APP_URL di dalam kod HTML ini dengan pautan Google Apps Script baru anda terlebih dahulu.', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Sedang Mencari...',
+                text: 'Mencari dan memuat turun rekod dari pangkalan data...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading() }
+            });
+
+            try {
+                const url = new URL(WEB_APP_URL);
+                url.searchParams.append('action', 'retrieve');
+                url.searchParams.append('noRujukan', noRuj);
+
+                const callbackName = 'jsonpCallback_' + Math.round(100000 * Math.random());
+                url.searchParams.append('callback', callbackName);
+
+                window[callbackName] = function (result) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+
+                    if (result.status === 'success' && result.data) {
+                        Swal.close();
+                        Toast.fire({ icon: 'success', title: 'Rekod berjaya dimuat turun!' });
+                        saveCurrentStateToHistory(); // Simpan history untuk undo
+                        loadFormJSONData(result.data);
+                    } else {
+                        Swal.fire('Tidak Dijumpai', result.message || ('Tiada rekod tersimpan bagi No. Rujukan: ' + noRuj), 'info');
+                    }
+                };
+
+                const script = document.createElement('script');
+                script.src = url.toString();
+                script.onerror = function () {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    Swal.fire('Ralat', 'Gagal berhubung dengan pangkalan data awan. Sila semak sambungan internet dan URL Web App.', 'error');
+                };
+                document.body.appendChild(script);
+            } catch (error) {
+                console.error(error);
+                Swal.fire('Ralat', 'Gagal berhubung dengan pangkalan data awan. Sila semak sambungan internet dan URL Web App.', 'error');
+            }
+        }
+
+        async function saveToGoogleSheets() {
+            getSafeUniqueRef(); // Auto-jana jika masih default
+            const formData = getFormJSONData();
+
+            if (!WEB_APP_URL || WEB_APP_URL.includes("SILA_MASUKKAN")) {
+                Swal.fire('Belum Disambung', 'Sila tukar WEB_APP_URL di dalam kod HTML ini dengan pautan Google Apps Script baru anda terlebih dahulu.', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: 'Sedang Menyimpan...',
+                text: 'Menghantar rekod ke pangkalan data awan...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading() }
+            });
+
+            try {
+                // We use 'no-cors' mode because Apps Script web apps often fail CORS preflight for POST from arbitrary domains. 
+                // 'no-cors' is fire-and-forget, meaning we won't get a readable JSON response back, but the data will reach the server.
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify({
+                        action: 'save',
+                        noRujukan: formData.pelulus.noRujukan,
+                        fasiliti: formData.profil.fasiliti,
+                        tarikh: formData.profil.tarikh,
+                        data: formData
+                    })
+                });
+
+                // Assume success if fetch didn't throw network error
+                const timeStr = new Date().toLocaleString('ms-MY');
+                const lastSavedSpan = document.getElementById('last-saved');
+                if (lastSavedSpan) {
+                    lastSavedSpan.innerText = timeStr;
+                    lastSavedSpan.classList.remove('text-slate-500');
+                    lastSavedSpan.classList.add('text-success');
+                }
+
+                Swal.close();
+                Toast.fire({ icon: 'success', title: 'Berjaya dihantar ke awan!' });
+            } catch (error) {
+                console.error('Error saving data:', error);
+                Swal.fire('Ralat Menyimpan', 'Gagal mendaftar ke pangkalan data awan. Sila semak sambungan internet anda.', 'error');
+            }
+        }
+
+        function loadFormJSONData(jsonData) {
+            if (!jsonData) return;
+
+            // 1. Profil
+            if (jsonData.profil) {
+                const infoInputs = document.querySelectorAll('#profil-container input:not([type="date"])');
+                const dateInputs = document.querySelectorAll('#profil-container input[type="date"]');
+                if (infoInputs[0]) infoInputs[0].value = jsonData.profil.fasiliti || '';
+                if (infoInputs[1]) infoInputs[1].value = jsonData.profil.jabatan || '';
+                if (infoInputs[2]) infoInputs[2].value = jsonData.profil.unit || '';
+                if (infoInputs[3]) infoInputs[3].value = jsonData.profil.prosesKerja || '';
+                if (infoInputs[4]) infoInputs[4].value = jsonData.profil.lokasi || '';
+
+                if (dateInputs.length > 0) dateInputs[0].value = jsonData.profil.tarikh || '';
+            }
+
+            // 2. Pentaksir
+            if (jsonData.pentaksir && Array.isArray(jsonData.pentaksir)) {
+                const pentaksirContainer = document.getElementById('team-members-container');
+                pentaksirContainer.innerHTML = '';
+                jsonData.pentaksir.forEach(name => {
+                    if (name.trim() !== '') {
+                        addTeamMember();
+                        const inputs = pentaksirContainer.querySelectorAll('input');
+                        inputs[inputs.length - 1].value = name;
+                    }
+                });
+                if (pentaksirContainer.children.length === 0) addTeamMember();
+            }
+
+            // 3. Pelulus
+            if (jsonData.pelulus) {
+                const pInputs = document.querySelectorAll('#pelulus-container input');
+                if (pInputs[1]) pInputs[1].value = jsonData.pelulus.nama || '';
+                if (pInputs[2]) pInputs[2].value = jsonData.pelulus.jawatan || '';
+                if (pInputs[3]) pInputs[3].value = jsonData.pelulus.tarikh || '';
+
+                const refInput = document.getElementById('no-rujukan-input');
+                if (refInput) refInput.value = jsonData.pelulus.noRujukan || '';
+            }
+
+            // 4. Aktiviti & Hazard
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (jsonData.aktiviti && Array.isArray(jsonData.aktiviti)) {
+                jsonData.aktiviti.forEach(akt => {
+                    if (akt.hazards && akt.hazards.length > 0) {
+                        akt.hazards.forEach((haz, index) => {
+                            if (index === 0) {
+                                addMainRow(true);
+                            } else {
+                                addSubRow(tbody.lastElementChild.querySelector('td'), true);
+                            }
+
+                            const lastTr = tbody.lastElementChild;
+                            const textareas = lastTr.querySelectorAll('textarea');
+                            const selects = lastTr.querySelectorAll('select');
+
+                            let tIndex = 0, sIndex = 0;
+                            if (index === 0) {
+                                if (textareas[tIndex]) textareas[tIndex++].value = akt.namaAktiviti || '';
+                            }
+
+                            if (textareas[tIndex]) textareas[tIndex++].value = haz.penerangan || '';
+                            if (selects[sIndex]) selects[sIndex++].value = haz.kategori || '';
+                            if (textareas[tIndex]) textareas[tIndex++].value = haz.kesan || '';
+
+                            // Kawalan Sedia Ada
+                            const controlContainer = lastTr.querySelector('.controls-container') || lastTr.querySelector('td.align-top > div');
+                            if (controlContainer && haz.kawalanSediaAda && Array.isArray(haz.kawalanSediaAda)) {
+                                controlContainer.innerHTML = '';
+                                haz.kawalanSediaAda.forEach((k, kIdx) => {
+                                    const newItem = document.createElement('div');
+                                    newItem.className = 'relative group control-item mb-2 pb-2 ' + (kIdx > 0 ? 'border-t border-slate-200 pt-2' : '');
+                                    newItem.innerHTML = `<textarea class="table-input h-16 bg-white" placeholder="Kawalan..."></textarea>
+                                        <button onclick="removeElementAndSave(this)" class="absolute top-4 right-2 text-danger hover:text-rose-700 hidden group-hover:block no-print bg-white rounded-full p-1 shadow-sm border border-rose-100"><i class="ph-bold ph-minus"></i></button>`;
+                                    newItem.querySelector('textarea').value = k;
+                                    controlContainer.appendChild(newItem);
+                                });
+                            }
+
+                            if (selects[sIndex]) selects[sIndex++].value = haz.preL || '';
+                            if (selects[sIndex]) selects[sIndex++].value = haz.preS || '';
+
+                            if (textareas[tIndex]) textareas[tIndex++].value = haz.kawalanTambahan || '';
+
+                            if (selects[sIndex]) selects[sIndex++].value = haz.postL || '';
+                            if (selects[sIndex]) selects[sIndex++].value = haz.postS || '';
+
+                            if (textareas[tIndex]) textareas[tIndex++].value = haz.pegawai || '';
+                            if (textareas[tIndex]) textareas[tIndex++].value = haz.catatan || '';
+
+                            calcRow(lastTr.querySelector('.pre-l'));
+                        });
+                    }
+                });
+            }
+
+            if (tbody.children.length === 0) {
+                addMainRow(true);
+            }
+
+            updateRowNumbers();
+            if (!document.getElementById('tab-dashboard').classList.contains('hidden')) updateDashboardData();
+            lastSavedState = getFormJSONData();
+        }
+
+        function getFormJSONData() {
+            const formData = {
+                profil: {
+                    fasiliti: document.querySelectorAll('#profil-container input:not([type="date"])')[0]?.value || '',
+                    jabatan: document.querySelectorAll('#profil-container input:not([type="date"])')[1]?.value || '',
+                    unit: document.querySelectorAll('#profil-container input:not([type="date"])')[2]?.value || '',
+                    prosesKerja: document.querySelectorAll('#profil-container input:not([type="date"])')[3]?.value || '',
+                    lokasi: document.querySelectorAll('#profil-container input:not([type="date"])')[4]?.value || '',
+                    tarikh: document.querySelectorAll('#profil-container input[type="date"]')[0]?.value || ''
+                },
+                pentaksir: Array.from(document.querySelectorAll('.team-member-row input')).map(i => i.value),
+                pelulus: {
+                    nama: document.querySelectorAll('#pelulus-container input')[1]?.value || '',
+                    jawatan: document.querySelectorAll('#pelulus-container input')[2]?.value || '',
+                    tarikh: document.querySelectorAll('#pelulus-container input[type="date"]')[0]?.value || '',
+                    noRujukan: document.getElementById('no-rujukan-input')?.value || ''
+                },
+                aktiviti: []
+            };
+
+            const rows = document.querySelectorAll('#tableBody tr');
+            let currentActivity = null;
+
+            rows.forEach(row => {
+                if (row.classList.contains('main-row')) {
+                    currentActivity = {
+                        namaAktiviti: row.querySelector('.row-activity textarea')?.value || '',
+                        hazards: []
+                    };
+                    formData.aktiviti.push(currentActivity);
+                    extractHazardData(row, currentActivity.hazards);
+                } else if (row.classList.contains('sub-row') && currentActivity) {
+                    extractHazardData(row, currentActivity.hazards);
+                }
+            });
+            return formData;
+        }
+
+        function extractHazardData(row, targetArray) {
+            const textareas = row.querySelectorAll('textarea');
+            const selects = row.querySelectorAll('select');
+            let tIndex = 0, sIndex = 0;
+
+            // In sub-row there is no activity textarea
+            const isMain = row.classList.contains('main-row');
+            if (isMain) tIndex++;
+
+            let kawalan = [];
+            row.querySelectorAll('.control-item textarea').forEach(ta => kawalan.push(ta.value));
+
+            targetArray.push({
+                penerangan: textareas[tIndex++]?.value || '',
+                kategori: selects[sIndex++]?.value || '',
+                kesan: textareas[tIndex++]?.value || '',
+                kawalanSediaAda: kawalan,
+                preL: selects[sIndex++]?.value || '',
+                preS: selects[sIndex++]?.value || '',
+                kawalanTambahan: textareas[tIndex++]?.value || '',
+                postL: selects[sIndex++]?.value || '',
+                postS: selects[sIndex++]?.value || '',
+                pegawai: textareas[tIndex++]?.value || '',
+                catatan: textareas[tIndex++]?.value || ''
+            });
+        }
+
+        function generateUniqueRef() {
+            const dateObj = new Date();
+            const yearStr = dateObj.getFullYear();
+            const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const randomCode = Math.floor(1000 + Math.random() * 9000); // 4 digit rawak
+
+            const newRef = `HIRARC-JKNK-${yearStr}${monthStr}-${randomCode}`;
+            const refInput = document.getElementById('no-rujukan-input');
+            if (refInput) refInput.value = newRef;
+            Toast.fire({ icon: 'info', title: 'No Rujukan Baru Dijana: ' + newRef });
+            return newRef;
+        }
+
+        function getSafeUniqueRef() {
+            const refInput = document.getElementById('no-rujukan-input');
+            if (!refInput) return generateUniqueRef();
+            // Jika ia masih default placeholder
+            if (refInput.value.trim() === 'HIRARC-JKNK-2026-001' || refInput.value.trim() === '') {
+                return generateUniqueRef();
+            }
+            return refInput.value.trim();
+        }
+
+        function exportDataJSON() {
+            getSafeUniqueRef(); // Auto-jana jika masih default
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getFormJSONData(), null, 4));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `HIRAC_${document.querySelectorAll('#tab-form .grid input')[0]?.value || 'Data'}.json`);
+            dlAnchorElem.click();
+            Toast.fire({ icon: 'success', title: 'Data disimpan dalam format JSON' });
+        }
+
+        function exportToWord() {
+            getSafeUniqueRef(); // Auto-jana jika masih default
+            const formData = getFormJSONData();
+
+            const htmlContent = `
+                                                < html xmlns: o = 'urn:schemas-microsoft-com:office:office' xmlns: w = 'urn:schemas-microsoft-com:office:word' xmlns = 'http://www.w3.org/TR/REC-html40' >
+            <head>
+                <meta charset='utf-8'>
+                <title>Borang HIRAC</title>
+                <style>
+                    @page WordSection1 {
+                        size: 29.7cm 21.0cm; /* A4 Landscape */
+                        mso-page-orientation: landscape; 
+                        margin: 1.5cm;
+                    }
+                    div.WordSection1 { page: WordSection1; }
+                    body { font-family: 'Arial', sans-serif; font-size: 10pt; color: #000; }
+                    h1 { font-size: 14pt; font-weight: bold; text-align: center; text-transform: uppercase; margin-bottom: 5px; }
+                    h2 { font-size: 11pt; text-align: center; font-weight: normal; margin-top: 0; color: #333; }
+                    
+                    .header-info-table { border: none; width: 100%; margin-bottom: 20px; }
+                    .header-info-table td { vertical-align: top; border: none; }
+                    
+                    .form-table { width: 100%; border-collapse: collapse; border: 1px solid #000; }
+                    .form-table th, .form-table td { border: 1px solid #000; padding: 6px; font-size: 9pt; }
+                    .form-table th { background-color: #f1f5f9; text-align: left; text-transform: uppercase; width: 35%; }
+                    
+                    .main-hirac { width: 100%; border-collapse: collapse; font-size: 9pt; }
+                    .main-hirac th, .main-hirac td { border: 1px solid #000; padding: 5px; text-align: center; vertical-align: top; }
+                    .main-hirac th { background-color: #cbd5e1; font-weight: bold; }
+                    .main-hirac td.text-left { text-align: left; }
+                    .bg-gray { background-color: #e2e8f0; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+            <div class="WordSection1">
+                <div style="text-align:center; margin-bottom: 10px;">
+                    <h1>Kementerian Kesihatan Malaysia</h1>
+                    <h2>Jabatan Kesihatan Negeri Kedah<br>Sistem Pentaksiran Risiko Pekerjaan</h2>
+                </div>
+                <hr style="border: 1px solid #000; margin-bottom: 15px;">
+                
+                <table class="header-info-table">
+                  <tr>
+                    <td width="48%">
+                        <table class="form-table">
+                            <tr><th>Fasiliti</th><td>${formData.profil.fasiliti}</td></tr>
+                            <tr><th>Jabatan/Bahagian</th><td>${formData.profil.jabatan}</td></tr>
+                            <tr><th>Unit</th><td>${formData.profil.unit}</td></tr>
+                            <tr><th>Lokasi</th><td>${formData.profil.lokasi}</td></tr>
+                            <tr><th>Tarikh</th><td>${formData.profil.tarikh}</td></tr>
+                        </table>
+                    </td>
+                    <td width="4%">&nbsp;</td>
+                    <td width="48%">
+                         <table class="form-table">
+                            <tr><th colspan="2" style="text-align:center; background-color:#e2e8f0;">Pengesahan & Pasukan</th></tr>
+                            <tr><th width="40%">Ketua Pasukan</th><td>${formData.pentaksir[0] || '-'}</td></tr>
+                            <tr><th>Ahli Pasukan</th><td>${formData.pentaksir.slice(1).filter(Boolean).join(', ') || '-'}</td></tr>
+                            <tr><th>Diluluskan Oleh</th><td>${formData.pelulus.nama} (${formData.pelulus.jawatan})</td></tr>
+                            <tr><th>No. Rujukan</th><td><b>${formData.pelulus.noRujukan}</b></td></tr>
+                         </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table class="main-hirac">
+                    <tr>
+                        <th rowspan="2" width="12%">Aktiviti Pekerjaan</th>
+                        <th colspan="3" width="30%" style="background-color: #bae6fd;">Mengenalpasti Hazard</th>
+                        <th colspan="4" width="22%" style="background-color: #fed7aa;">Analisis Risiko Asal</th>
+                        <th colspan="5" width="36%" style="background-color: #d9f99d;">Kawalan Risiko & Tindakan</th>
+                    </tr>
+                    <tr>
+                        <th width="12%" style="background-color: #e0f2fe;">Hazard</th>
+                        <th width="8%" style="background-color: #e0f2fe;">Kategori</th>
+                        <th width="10%" style="background-color: #e0f2fe;">Kesan</th>
+                        
+                        <th width="10%" style="background-color: #ffedd5;">Kawalan Sedia Ada</th>
+                        <th width="3%" style="background-color: #ffedd5;">L</th>
+                        <th width="3%" style="background-color: #ffedd5;">S</th>
+                        <th width="6%" style="background-color: #ffedd5;">RMN</th>
+                        
+                        <th width="12%" style="background-color: #ecfccb;">Kawalan Tambahan</th>
+                        <th width="3%" style="background-color: #ecfccb;">L</th>
+                        <th width="3%" style="background-color: #ecfccb;">S</th>
+                        <th width="6%" style="background-color: #ecfccb;">RMN</th>
+                        <th width="12%" style="background-color: #ecfccb;">Tindakan (PIC)</th>
+                    </tr>
+                    ${buildHiracWordRows(formData)}
+                </table>
+            </div>
+            </body>
+            </html > `;
+
+            const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(htmlContent);
+            const fileDownload = document.createElement("a");
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            fileDownload.download = `Borang_HIRAC_${formData.profil.fasiliti.replace(/\s+/g, '_')} _A4_Landscape.doc`;
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+            Toast.fire({ icon: 'success', title: 'Berjaya dieksport ke Word (A4 Landscape)' });
+        }
+
+        function buildHiracWordRows(formData) {
+            let rowHtml = "";
+            formData.aktiviti.forEach(akt => {
+                const totalHazards = akt.hazards.length;
+                akt.hazards.forEach((haz, index) => {
+                    rowHtml += `< tr > `;
+                    if (index === 0) {
+                        rowHtml += `< td class="text-left" rowspan = "${totalHazards}" > <b>${akt.namaAktiviti.replace(/\n/g, '<br>')}</b></td > `;
+                    }
+
+                    const rmnPre = (haz.preL * haz.preS) || 0;
+                    const rmnPost = (haz.postL * haz.postS) || 0;
+
+                    rowHtml += `
+                                                < td class="text-left" > ${haz.penerangan.replace(/\n/g, '<br>')}</td >
+                        <td>${haz.kategori}</td>
+                        <td class="text-left">${haz.kesan.replace(/\n/g, '<br>')}</td>
+                        <td class="text-left">${haz.kawalanSediaAda.map(k => k.replace(/\n/g, '<br>')).join('<hr style="border:0.5px dotted #ccc; margin: 3px 0;">')}</td>
+                        <td class="bg-gray">${haz.preL || '-'}</td>
+                        <td class="bg-gray">${haz.preS || '-'}</td>
+                        <td class="bg-gray"><b>${rmnPre}</b></td>
+                        <td class="text-left">${haz.kawalanTambahan.replace(/\n/g, '<br>')}</td>
+                        <td class="bg-gray">${haz.postL || '-'}</td>
+                        <td class="bg-gray">${haz.postS || '-'}</td>
+                        <td class="bg-gray"><b>${rmnPost}</b></td>
+                        <td class="text-left"><b>${haz.pegawai}</b><br><i style="color: #475569;">${haz.catatan}</i></td>
+                    </tr > `;
+                });
+            });
+            if (formData.aktiviti.length === 0) {
+                rowHtml = `< tr > <td colspan="12">Tiada data dimasukkan setakat ini.</td></tr > `;
+            }
+            return rowHtml;
+        }
+
+        function exportToExcel() {
+            getSafeUniqueRef(); // Auto-jana jika masih default
+            const formData = getFormJSONData();
+            let excelData = [
+                ['Fasiliti', 'Jabatan', 'Unit', 'Proses Kerja', 'Lokasi', 'Tarikh Pentaksiran', 'No. Rujukan'],
+                [formData.profil.fasiliti, formData.profil.jabatan, formData.profil.unit, formData.profil.prosesKerja, formData.profil.lokasi, formData.profil.tarikh, formData.pelulus.noRujukan],
+                [],
+                ['NO', 'AKTIVITI', 'HAZARD', 'KATEGORI', 'KESAN', 'KAWALAN SEDIA ADA', 'PRE-L', 'PRE-S', 'RMN', 'KAWALAN TAMBAHAN', 'POST-L', 'POST-S', 'RMN BARU', 'PEGAWAI', 'CATATAN']
+            ];
+
+            let count = 1;
+            formData.aktiviti.forEach(akt => {
+                akt.hazards.forEach((haz, index) => {
+                    excelData.push([
+                        index === 0 ? count : '',
+                        index === 0 ? akt.namaAktiviti : '',
+                        haz.penerangan, haz.kategori, haz.kesan, haz.kawalanSediaAda.join(', \n'),
+                        haz.preL, haz.preS, haz.preL * haz.preS,
+                        haz.kawalanTambahan, haz.postL, haz.postS, haz.postL * haz.postS,
+                        haz.pegawai, haz.catatan
+                    ]);
+                });
+                count++;
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(excelData);
+            XLSX.utils.book_append_sheet(wb, ws, "Rekod HIRAC");
+            XLSX.writeFile(wb, "Borang_HIRAC.xlsx");
+            Toast.fire({ icon: 'success', title: 'Berjaya dieksport ke Excel' });
+        }
+
+        async function saveToGoogleSheets() {
+            getSafeUniqueRef(); // Auto-jana jika masih default
+            const noRuj = document.getElementById('no-rujukan-input').value.trim();
+            const fasiliti = document.querySelectorAll('#tab-form .grid input')[0]?.value || '';
+            const formData = getFormJSONData();
+
+            Swal.fire({
+                title: 'Sedang Menyimpan...',
+                text: 'Menghantar rekod ke pangkalan data awan...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading() }
+            });
+
+            try {
+                const payload = {
+                    action: 'save',
+                    noRujukan: noRuj,
+                    fasiliti: fasiliti,
+                    tarikh: new Date().toISOString().split('T')[0],
+                    data: formData
+                };
+
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+
+                Swal.close();
+                Toast.fire({ icon: 'success', title: 'Disimpan!' });
+                lastSavedState = formData;
+
+            } catch (error) {
+                console.error("Save Error:", error);
+                Swal.fire('Ralat Penyimpanan', 'Gagal berhubung ke sistem Cloud.', 'error');
+            }
+        }
+
+
+        function downloadDashboardImage() {
+            getSafeUniqueRef(); // Auto-jana jika masih default
+            Swal.fire({
+                title: 'Menjana Dokumen...',
+                text: 'Mengeksport data Dashboard ke MS Word.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading() }
+            });
+
+            setTimeout(() => {
+                try {
+                    const formData = getFormJSONData();
+                    const totalHazards = document.getElementById('dash-total').textContent;
+                    const preHigh = document.getElementById('dash-pre-high').textContent;
+                    const preMed = document.getElementById('dash-pre-med').textContent;
+                    const preLow = document.getElementById('dash-pre-low').textContent;
+
+                    // Convert Chart to Base64 Image
+                    const canvas = document.getElementById('categoryChart');
+                    let chartImageUrl = "";
+                    if (canvas) {
+                        chartImageUrl = canvas.toDataURL('image/png');
+                    }
+
+                    const htmlContent = `
+                                                < html xmlns: o = 'urn:schemas-microsoft-com:office:office' xmlns: w = 'urn:schemas-microsoft-com:office:word' xmlns = 'http://www.w3.org/TR/REC-html40' >
+                    <head>
+                        <meta charset='utf-8'>
+                        <title>Laporan Eksekutif Dashboard</title>
+                        <style>
+                            @page WordSection1 { size: 21.0cm 29.7cm; margin: 2cm; }
+                            div.WordSection1 { page: WordSection1; font-family: 'Arial', sans-serif; }
+                            h1 { color: #0f172a; font-size: 18pt; text-align: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 20px;}
+                            .profile-table { border: 1px solid #e2e8f0; border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 10pt;}
+                            .profile-table th { background-color: #f8fafc; text-align: left; padding: 8px; border: 1px solid #e2e8f0; width: 30%; color: #475569;}
+                            .profile-table td { padding: 8px; border: 1px solid #e2e8f0; font-weight: bold; color: #1e293b;}
+                            
+                            .stats-table { width: 100%; border: none; margin-bottom: 30px; }
+                            .stats-table td { padding: 15px; text-align: center; border-radius: 8px; }
+                            .stat-box { border: 1px solid #e2e8f0; background-color: #f8fafc;}
+                            .stat-label { font-size: 10pt; color: #64748b; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: block;}
+                            .stat-value { font-size: 24pt; font-weight: bold; color: #0f172a; display: block;}
+                            
+                            .chart-container { text-align: center; margin-top: 20px; padding: 20px; border: 1px solid #e2e8f0; background-color: #f8fafc; border-radius: 8px;}
+                            .chart-title { font-size: 12pt; font-weight: bold; color: #475569; margin-bottom: 15px; text-transform: uppercase;}
+                        </style>
+                    </head>
+                    <body>
+                        <div class="WordSection1">
+                            <h1>Laporan Eksekutif Analitik Risiko Jabatan</h1>
+                            
+                            <table class="profile-table">
+                                <tr><th>Fasiliti</th><td>${formData.profil.fasiliti}</td></tr>
+                                <tr><th>Proses Kerja</th><td>${formData.profil.prosesKerja || '-'}</td></tr>
+                                <tr><th>Tarikh Analitik</th><td>${document.getElementById('dash-tarikh').textContent}</td></tr>
+                            </table>
+                            
+                            <table class="stats-table">
+                                <tr>
+                                    <td class="stat-box" width="25%">
+                                        <span class="stat-label">Jumlah Hazard</span>
+                                        <span class="stat-value" style="color: #6366f1;">${totalHazards}</span>
+                                    </td>
+                                    <td class="stat-box" width="25%">
+                                        <span class="stat-label">Risiko Tinggi</span>
+                                        <span class="stat-value" style="color: #e11d48;">${preHigh}</span>
+                                    </td>
+                                    <td class="stat-box" width="25%">
+                                        <span class="stat-label">Risiko Sederhana</span>
+                                        <span class="stat-value" style="color: #d97706;">${preMed}</span>
+                                    </td>
+                                    <td class="stat-box" width="25%">
+                                        <span class="stat-label">Risiko Rendah</span>
+                                        <span class="stat-value" style="color: #059669;">${preLow}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            ${chartImageUrl ? `
+                            <div class="chart-container">
+                                <div class="chart-title">Taburan Kategori Hazard</div>
+                                <img src="${chartImageUrl}" width="400" height="auto" alt="Doughnut Chart"/>
+                            </div>` : ''}
+                            
+                            <p style="text-align:center; font-size: 8pt; color: #94a3b8; margin-top: 40px;">
+                                Dijana oleh Sistem HIRAC JKN Kedah pada ${new Date().toLocaleString('ms-MY')}
+                            </p>
+                        </div>
+                    </body>
+                    </html > `;
+
+                    const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(htmlContent);
+                    const fileDownload = document.createElement("a");
+                    document.body.appendChild(fileDownload);
+                    fileDownload.href = source;
+                    fileDownload.download = `Dashboard_Analitik_${formData.profil.fasiliti.replace(/\\s+/g, '_')}.doc`;
+                    fileDownload.click();
+                    document.body.removeChild(fileDownload);
+
+                    Swal.close();
+                    Toast.fire({ icon: 'success', title: 'Berjaya dieksport ke MS Word!' });
+                } catch (error) {
+                    console.error("Dashboard Export Error: ", error);
+                    Swal.fire('Ralat', 'Gagal menjana dokumen MS Word dari Dashboard.', 'error');
+                }
+            }, 500); // Small delay to allow canvas render
+        }
+
+        function updateDashboardData() {
+            const formData = getFormJSONData();
+            document.getElementById('dash-facility-name').textContent = formData.profil.fasiliti || 'NAMA FASILITI';
+            document.getElementById('dash-bahagian').textContent = formData.profil.jabatan || 'Bahagian';
+            document.getElementById('dash-unit').textContent = formData.profil.unit || 'Unit';
+            document.getElementById('dash-proses').textContent = formData.profil.prosesKerja || 'Proses Kerja';
+            document.getElementById('dash-lokasi').textContent = formData.profil.lokasi || 'Lokasi';
+            document.getElementById('dash-tarikh').textContent = formData.profil.tarikh || new Date().toISOString().split('T')[0];
+
+            let preCounts = { low: 0, medium: 0, high: 0 };
+            let catCounts = { 'Fizikal': 0, 'Kimia': 0, 'Biologikal': 0, 'Ergonomik': 0, 'Psikososial': 0 };
+            let totalHazards = 0;
+
+            formData.aktiviti.forEach(akt => {
+                akt.hazards.forEach(haz => {
+                    totalHazards++;
+                    const preRmn = (parseInt(haz.preL) || 0) * (parseInt(haz.preS) || 0);
+                    if (preRmn >= 15) preCounts.high++;
+                    else if (preRmn >= 5) preCounts.medium++;
+                    else if (preRmn > 0) preCounts.low++;
+
+                    if (catCounts[haz.kategori] !== undefined) {
+                        catCounts[haz.kategori]++;
+                    }
+                });
+            });
+
+            document.getElementById('dash-total').textContent = totalHazards;
+            document.getElementById('dash-pre-high').textContent = preCounts.high;
+            document.getElementById('dash-pre-med').textContent = preCounts.medium;
+            document.getElementById('dash-pre-low').textContent = preCounts.low;
+
+            let hazardListHtml = '';
+            let hazardIndex = 1;
+
+            formData.aktiviti.forEach(akt => {
+                akt.hazards.forEach(haz => {
+                    const preRmn = (parseInt(haz.preL) || 0) * (parseInt(haz.preS) || 0);
+                    let badgeClass = "bg-slate-100 text-slate-500 border-slate-200";
+                    let riskLevel = "Tiada Penilaian";
+
+                    if (preRmn >= 15) {
+                        badgeClass = "bg-rose-100 text-rose-700 border-rose-200";
+                        riskLevel = "TINGGI (" + preRmn + ")";
+                    } else if (preRmn >= 5) {
+                        badgeClass = "bg-amber-100 text-amber-700 border-amber-200";
+                        riskLevel = "SEDERHANA (" + preRmn + ")";
+                    } else if (preRmn > 0) {
+                        badgeClass = "bg-emerald-100 text-emerald-700 border-emerald-200";
+                        riskLevel = "RENDAH (" + preRmn + ")";
+                    }
+
+                    hazardListHtml += `
+                        <tr class="hover:bg-slate-50/50 transition-colors border-b border-slate-50 group">
+                            <td class="p-4 text-center font-bold text-slate-400">${hazardIndex++}</td>
+                            <td class="p-4">
+                                <p class="text-sm font-bold text-slate-700 mb-1 group-hover:text-brand-600 transition-colors">${haz.penerangan.replace(/\n/g, '<br>') || 'Tiada Keterangan'}</p>
+                                <div class="flex items-center gap-2 text-xs mt-1.5 flex-wrap">
+                                    <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-600 border border-brand-100 font-bold">${haz.kategori || 'N/A'}</span>
+                                    <span class="text-slate-500 line-clamp-1 truncate block max-w-sm" title="${haz.kesan.replace(/\n/g, ' ')}"><i class="ph-fill ph-warning-circle text-amber-500 opacity-70"></i> ${haz.kesan.replace(/\n/g, ' ') || 'Tiada rekod kesan'}</span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="px-3 py-1.5 rounded-lg border font-bold text-xs whitespace-nowrap ${badgeClass}">${riskLevel}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+
+            if (hazardListHtml === '') {
+                hazardListHtml = '<tr><td colspan="3" class="p-8 text-center text-slate-400 italic flex items-center justify-center gap-2"><i class="ph ph-folder-dashed text-xl"></i> Tiada rekod hazard buat masa ini. Sila isi jadual di borang utama.</td></tr>';
+            }
+
+            document.getElementById('dash-hazard-list').innerHTML = hazardListHtml;
+
+            const ctxDoughnut = document.getElementById('categoryChart').getContext('2d');
+            if (categoryChartInstance) { categoryChartInstance.destroy(); }
+            categoryChartInstance = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Fizikal', 'Kimia', 'Biologikal', 'Ergonomik', 'Psikososial'],
+                    datasets: [{
+                        data: [catCounts['Fizikal'], catCounts['Kimia'], catCounts['Biologikal'], catCounts['Ergonomik'], catCounts['Psikososial']],
+                        backgroundColor: ['#0ea5e9', '#f43f5e', '#10b981', '#f59e0b', '#8b5cf6'],
+                        borderWidth: 0, hoverOffset: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '75%' }
+            });
+        }
+
+        window.addEventListener('beforeprint', () => {
+            document.querySelectorAll('textarea').forEach(t => {
+                t.style.height = 'auto';
+                t.style.height = (t.scrollHeight) + 'px';
+            });
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.risk-factor.pre-l').forEach(el => calcRow(el));
+            updateRowNumbers();
+        });
+    </script>
+</body>
+
+</html>
